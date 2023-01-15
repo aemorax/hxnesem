@@ -72,6 +72,15 @@ class Processor {
 		this.opTable.set(0x2C, {cycles: 4, addressingFunction: this.abs, operationFunction: this.bit});
 		this.opTable.set(0x2D, {cycles: 4, addressingFunction: this.abs, operationFunction: this.and});
 		this.opTable.set(0x2E, {cycles: 6, addressingFunction: this.abs, operationFunction: this.rol});
+
+		this.opTable.set(0x30, {cycles: 2, addressingFunction: this.rel, operationFunction: this.bmi}); // bmi rel 2
+		this.opTable.set(0x31, {cycles: 5, addressingFunction: this.izx, operationFunction: this.and}); // and izx 5
+		this.opTable.set(0x35, {cycles: 4, addressingFunction: this.zpx, operationFunction: this.and}); // and zpx 4
+		this.opTable.set(0x36, {cycles: 6, addressingFunction: this.zpx, operationFunction: this.rol}); // rol zpx 6
+		this.opTable.set(0x38, {cycles: 2, addressingFunction: this.imp, operationFunction: this.sec}); // sec imp 2
+		this.opTable.set(0x39, {cycles: 4, addressingFunction: this.aby, operationFunction: this.and}); // and aby 4
+		this.opTable.set(0x3D, {cycles: 4, addressingFunction: this.abx, operationFunction: this.and}); // and abx 4
+		this.opTable.set(0x3E, {cycles: 7, addressingFunction: this.abx, operationFunction: this.rol}); // rol abx 7
 	}
 
 	public function connectBus(bus:Bus) {
