@@ -1,6 +1,5 @@
 package model;
 
-import sys.net.Address;
 import haxe.ds.Vector;
 
 typedef Registers = {
@@ -23,6 +22,9 @@ class Processor {
 
 	public var bus:Bus;
 	public var regs:Registers;
+	public var data:Int = 0;
+	public var addr:Int = 0;
+	public var relAddr:Int = 0;
 	public var carry(get, set):Int;
 	public var zero(get, set):Int;
 	public var int(get, set):Int;
@@ -333,29 +335,128 @@ class Processor {
 	function resolve(opcode:Int) {}
 
 	// --- Addressing mode ops
-	function imm() {}
+	function imm() {
+		addr = regs.pc++;
+		return false;
+	}
 
-	function imp() {}
+	function imp() {
+		data = regs.a;
+		return false;
+	}
 
-	function zpx() {}
+	function zpx() {
+		addr = read(regs.pc) + regs.x;
+		regs.pc++;
+		addr &= 0xFF;
+		return false;
+	}
 
-	function zpy() {}
+	function zpy() {
+		addr = read(regs.pc) + regs.y;
+		regs.pc++;
+		addr &= 0xFF;
+		return false;
+	}
 
-	function zp0() {}
+	function zp0() {
+		addr = read(regs.pc);
+		regs.pc++;
+		addr &= 0xFF;
+		return false;
+	}
 
-	function rel() {}
+	function rel() {
+		relAddr = read(regs.pc);
+		regs.pc++;
+		if ((relAddr & 0x80) != 0) {
+			relAddr |= 0xFF00;
+		}
+		return false;
+	}
 
-	function abs() {}
+	function abs() {
+		var lo = read(regs.pc);
+		regs.pc++;
+		var hi = read(regs.pc);
+		regs.pc++;
 
-	function abx() {}
+		addr = (hi << 8) | lo;
+		return false;
+	}
 
-	function aby() {}
+	function abx() {
+		var lo = read(regs.pc);
+		regs.pc++;
+		var hi = read(regs.pc);
+		regs.pc++;
 
-	function ind() {}
+		addr = (hi << 8) | lo;
+		addr += regs.x;
 
-	function izx() {}
+		if ((addr & 0xFF00) != (hi << 8)) {
+			return true;
+		}
+		return false;
+	}
 
-	function izy() {}
+	function aby() {
+		var lo = read(regs.pc);
+		regs.pc++;
+		var hi = read(regs.pc);
+		regs.pc++;
+
+		addr = (hi << 8) | lo;
+		addr += regs.y;
+
+		if ((addr & 0xFF00) != (hi << 8)) {
+			return true;
+		}
+		return false;
+	}
+
+	function ind() {
+		var lo = read(regs.pc);
+		regs.pc++;
+		var hi = read(regs.pc);
+		regs.pc++;
+
+		var ptr = (hi << 8) | lo;
+
+		if (lo == 0x00fff) {
+			addr = (read(ptr & 0xFF00) << 8) | read(ptr + 0);
+		} else {
+			addr = (read(ptr + 1) << 8) | read(ptr + 0);
+		}
+		return false;
+	}
+
+	function izx() {
+		var t = read(regs.pc);
+		regs.pc++;
+
+		var lo = read((t + regs.x) & 0xFF);
+		var hi = read((t + regs.x + 1) & 0xFF);
+
+		addr = (hi << 8) | lo;
+		return false;
+	}
+
+	function izy() {
+		var t = read(regs.pc);
+		regs.pc++;
+
+		var lo = read(t & 0xFF);
+		var hi = read((t + 1) & 0xFF);
+
+		addr = (hi << 8) | lo;
+		addr += regs.y;
+
+		if ((addr & 0xFF00) != (hi << 8)) {
+			return true;
+		}
+		return false;
+	}
 
 	// ---- Opcode ops
 
