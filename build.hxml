@@ -1,3 +1,6 @@
+--library heaps
+--library hlsdl
 --class-path src
 --main Emulator
---interp
+--hl out/emulator.hl
+--define windowSize=256x240

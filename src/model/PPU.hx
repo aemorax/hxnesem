@@ -1,8 +1,10 @@
 package model;
 
+import haxe.Exception;
 import haxe.io.Bytes;
 
 class PPU {
+	public var screen:Bytes;
 	public var frameDone = false;
 
 	private var tableName:Bytes;
@@ -10,8 +12,7 @@ class PPU {
 	private var tablePalette:Bytes;
 	private var cartridge:Cartridge;
 	private var cycle:Int = 0;
-	private var scanline:Int = -1;
-	private var screen:Bytes;
+	private var scanline:Int = 0;
 
 	private var palette:Array<Int> = [
 		0x545454, 0x001e74, 0x081090, 0x300088, 0x440064, 0x5c0030, 0x540400, 0x3c1800, 0x202a00, 0x083a00, 0x004000, 0x003c00, 0x00323c, 0x000000, 0x000000,
@@ -23,7 +24,11 @@ class PPU {
 
 	public function new(cart:Cartridge) {
 		this.cartridge = cart;
-		screen = Bytes.alloc(256 * 240 * 3);
+		screen = Bytes.alloc(256 * 240 * 4);
+	}
+
+	public function insertCartridge(cart:Cartridge) {
+		this.cartridge = cart;
 	}
 
 	public function cpuRead(addr:Int, ?rdonly:Bool = false) {}
@@ -47,13 +52,24 @@ class PPU {
 	public function clock() {
 		var x = cycle;
 		var y = scanline;
-		screen.setInt32(x * 3 + y * 256 * 3, palette[Math.random() > 0.5 ? 0x3f : 0x30]);
+		var c = palette[Math.random() > 0.5 ? 0x3f : 0x30];
+		var r = (c & 0xff0000) >> 16;
+		var g = (c & 0x00ff00) >> 8;
+		var b = (c & 0x0000ff);
+		try {
+			screen.set(x * 4 + y * 1024, r);
+			screen.set(x * 4 + y * 1024 + 1, g);
+			screen.set(x * 4 + y * 1024 + 2, b);
+			screen.set(x * 4 + y * 1024 + 3, 0xff);
+		} catch (e:Exception) {
+			trace(x * 4 + y * 1024);
+		}
 
 		cycle++;
-		if (cycle >= 341) {
+		if (cycle >= 256) {
 			cycle = 0;
 			scanline++;
-			if (scanline >= 261) {
+			if (scanline >= 240) {
 				scanline = 0;
 				frameDone = true;
 			}

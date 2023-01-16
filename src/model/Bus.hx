@@ -4,6 +4,7 @@ import haxe.io.Bytes;
 
 class Bus {
 	public var cpu:Processor;
+	public var ppu:PPU;
 
 	public var ram:Bytes = Bytes.alloc(2048);
 
@@ -11,6 +12,7 @@ class Bus {
 
 	public function new() {
 		cpu = new Processor(this);
+		ppu = new PPU(null);
 	}
 
 	public function write(address:Int, data:Int) {
@@ -29,6 +31,7 @@ class Bus {
 	public function insertCartridge(cartridge:Cartridge) {}
 
 	public function clock() {
+		ppu.clock();
 		if ((systemClockCounter % 3) == 0) {
 			cpu.clock();
 		}
