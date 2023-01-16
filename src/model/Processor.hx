@@ -14,7 +14,7 @@ typedef Registers = {
 typedef Operation = {
 	var cycles:Int;
 	var addressingFunction:Void->Bool;
-	var operationFunction:Void->Void;
+	var operationFunction:Void->Bool;
 }
 
 class Processor {
@@ -858,6 +858,7 @@ class Processor {
 		regs.x = data;
 		zero = regs.x == 0 ? 1 : 0;
 		negative = (regs.x & 0x80) != 0 ? 1 : 0;
+		return false;
 	}
 
 	/**
@@ -868,6 +869,7 @@ class Processor {
 		regs.y = data;
 		zero = regs.y == 0 ? 1 : 0;
 		negative = (regs.y & 0x80) != 0 ? 1 : 0;
+		return false;
 	}
 
 	/**
@@ -1028,65 +1030,122 @@ class Processor {
 	/**
 		substract with carry
 	**/
-	function sbc() {}
+	function sbc() {
+		fetch();
+		var val = data ^ 0xff;
+
+		cache = regs.a + val + carry;
+		carry = cache & 0xff00;
+		zero = (cache & 0xff) == 0 ? 1 : 0;
+		ovflow = (cache ^ regs.a) & (cache ^ val) & 0x80;
+		negative = cache & 0x80;
+		regs.a = cache & 0xff;
+		return true;
+	}
 
 	/**
 		set carry
 	**/
-	function sec() {}
+	function sec() {
+		carry = 1;
+		return false;
+	}
 
 	/**
 		set decimal
 	**/
-	function sed() {}
+	function sed() {
+		decm = 1;
+		return false;
+	}
 
 	/**
 		set interrupt disable
 	**/
-	function sei() {}
+	function sei() {
+		int = 1;
+		return false;
+	}
 
 	/**
 		store accumulator
 	**/
-	function sta() {}
+	function sta() {
+		write(addr, regs.a);
+		return false;
+	}
 
 	/**
 		store x
 	**/
-	function stx() {}
+	function stx() {
+		write(addr, regs.x);
+		return false;
+	}
 
 	/**
 		store y
 	**/
-	function sty() {}
+	function sty() {
+		write(addr, regs.y);
+		return false;
+	}
 
 	/**
 		transfer a to x
 	**/
-	function tax() {}
+	function tax() {
+		regs.x = regs.a;
+		zero = regs.x == 0 ? 1 : 0;
+		negative = regs.x & 0x80;
+		return false;
+	}
 
 	/**
 		transfer a to y
 	**/
-	function tay() {}
+	function tay() {
+		regs.y = regs.a;
+		zero = regs.y == 0 ? 1 : 0;
+		negative = regs.y & 0x80;
+		return false;
+	}
 
 	/**
 		transfer stack pointer to x
 	**/
-	function tsx() {}
+	function tsx() {
+		regs.x = regs.s;
+		zero = regs.x == 0 ? 1 : 0;
+		negative = regs.x & 0x80;
+		return false;
+	}
 
 	/**
 		transfer x to a
 	**/
-	function txa() {}
+	function txa() {
+		regs.a = regs.x;
+		zero = regs.a == 0 ? 1 : 0;
+		negative = regs.a & 0x80;
+		return false;
+	}
 
 	/**
 		transfer x to stack pointer
 	**/
-	function txs() {}
+	function txs() {
+		regs.s = regs.x;
+		return false;
+	}
 
 	/**
 		transfer y to a
 	**/
-	function tya() {}
+	function tya() {
+		regs.a = regs.y;
+		zero = regs.a == 0 ? 1 : 0;
+		negative = regs.a & 0x80;
+		return false;
+	}
 }
