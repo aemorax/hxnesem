@@ -677,52 +677,99 @@ class Processor {
 	/**
 		clear carry
 	**/
-	function clc() {}
+	function clc() {
+		carry = 0;
+		return false;
+	}
 
 	/**
 		clear decimal
 	**/
-	function cld() {}
+	function cld() {
+		decm = 0;
+		return false;
+	}
 
 	/**
 		clear interrupt disable
 	**/
-	function cli() {}
+	function cli() {
+		int = 0;
+		return false;
+	}
 
 	/**
 		clear overflow
 	**/
-	function clv() {}
+	function clv() {
+		ovflow = 0;
+		return false;
+	}
 
 	/**
 		compare with accumulator
 	**/
-	function cmp() {}
+	function cmp() {
+		fetch();
+		cache = regs.a - data;
+		carry = regs.a >= data ? 1 : 0;
+		zero = (cache & 0xff) == 0 ? 1 : 0;
+		negative = (cache & 0x80) != 0 ? 1 : 0;
+		return true;
+	}
 
 	/**
 		compare with x
 	**/
-	function cpx() {}
+	function cpx() {
+		fetch();
+		cache = regs.x - data;
+		carry = regs.x >= data ? 1 : 0;
+		zero = (cache & 0xff) == 0 ? 1 : 0;
+		negative = (cache & 0x80) != 0 ? 1 : 0;
+		return true;
+	}
 
 	/**
 		compare with y
 	**/
-	function cpy() {}
+	function cpy() {
+		fetch();
+		cache = regs.y - data;
+		carry = regs.y >= data ? 1 : 0;
+		zero = (cache & 0xff) == 0 ? 1 : 0;
+		negative = (cache & 0x80) != 0 ? 1 : 0;
+		return true;
+	}
 
 	/**
 		decrement
 	**/
-	function dec() {}
+	function dec() {
+		fetch();
+		cache = data - 1;
+		write(addr, cache & 0xff);
+		zero = (cache & 0xff) == 0 ? 1 : 0;
+		negative = (cache & 0x80) != 0 ? 1 : 0;
+	}
 
 	/**
 		decrement x
 	**/
-	function dex() {}
+	function dex() {
+		regs.x--;
+		zero = regs.x == 0 ? 1 : 0;
+		negative = (regs.x & 0x80) != 0 ? 1 : 0;
+	}
 
 	/**
 		decrement y
 	**/
-	function dey() {}
+	function dey() {
+		regs.y--;
+		zero = regs.y == 0 ? 1 : 0;
+		negative = (regs.y & 0x80) != 0 ? 1 : 0;
+	}
 
 	/**
 		exclusive or accumulator
