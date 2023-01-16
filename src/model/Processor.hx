@@ -81,6 +81,17 @@ class Processor {
 		this.opTable.set(0x39, {cycles: 4, addressingFunction: this.aby, operationFunction: this.and}); // and aby 4
 		this.opTable.set(0x3D, {cycles: 4, addressingFunction: this.abx, operationFunction: this.and}); // and abx 4
 		this.opTable.set(0x3E, {cycles: 7, addressingFunction: this.abx, operationFunction: this.rol}); // rol abx 7
+
+		this.opTable.set(0x40, {cycles: 6, addressingFunction: this.imp, operationFunction: this.rti}); // rti imp 6
+		this.opTable.set(0x41, {cycles: 6, addressingFunction: this.izx, operationFunction: this.eor}); // eor izx 6
+		this.opTable.set(0x45, {cycles: 3, addressingFunction: this.zp0, operationFunction: this.eor}); // eor zp0 3
+		this.opTable.set(0x46, {cycles: 5, addressingFunction: this.zp0, operationFunction: this.lsr}); // lsr zp0 5
+		this.opTable.set(0x48, {cycles: 3, addressingFunction: this.imp, operationFunction: this.pha}); // pha imp 3
+		this.opTable.set(0x49, {cycles: 2, addressingFunction: this.imm, operationFunction: this.eor}); // eor imm 2
+		this.opTable.set(0x4A, {cycles: 2, addressingFunction: this.imp, operationFunction: this.lsr}); // lsr imp 2
+		this.opTable.set(0x4C, {cycles: 3, addressingFunction: this.abs, operationFunction: this.jmp}); // jmp abs 3
+		this.opTable.set(0x4D, {cycles: 4, addressingFunction: this.abs, operationFunction: this.eor}); // eor abs 4
+		this.opTable.set(0x4E, {cycles: 6, addressingFunction: this.abs, operationFunction: this.lsr}); // lsr abs 6
 	}
 
 	public function connectBus(bus:Bus) {
@@ -253,17 +264,33 @@ class Processor {
 
 	function brk() {}
 
+	function bvc() {}
+
+	function bvs() {}
+
 	function clc() {}
+
+	function cld() {}
+
+	function eor() {}
+
+	function jmp() {}
 
 	function jsr() {}
 
+	function lsr() {}
+
 	function ora() {}
+
+	function pha() {}
 
 	function php() {}
 
 	function plp() {}
 
 	function rol() {}
+
+	function rti() {}
 
 	function sec() {}
 }
