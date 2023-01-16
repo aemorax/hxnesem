@@ -37,7 +37,8 @@ class Processor {
 	public var ovflow(get, set):Int;
 	public var negative(get, set):Int;
 
-	public function new() {
+	public function new(bus:Bus) {
+		this.bus = bus;
 		this.regs = {
 			p: 32,
 			a: 0,
