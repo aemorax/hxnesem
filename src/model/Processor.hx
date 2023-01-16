@@ -751,6 +751,7 @@ class Processor {
 		write(addr, cache & 0xff);
 		zero = (cache & 0xff) == 0 ? 1 : 0;
 		negative = (cache & 0x80) != 0 ? 1 : 0;
+		return false;
 	}
 
 	/**
@@ -760,6 +761,7 @@ class Processor {
 		regs.x--;
 		zero = regs.x == 0 ? 1 : 0;
 		negative = (regs.x & 0x80) != 0 ? 1 : 0;
+		return false;
 	}
 
 	/**
@@ -769,62 +771,143 @@ class Processor {
 		regs.y--;
 		zero = regs.y == 0 ? 1 : 0;
 		negative = (regs.y & 0x80) != 0 ? 1 : 0;
+		return false;
 	}
 
 	/**
 		exclusive or accumulator
 	**/
-	function eor() {}
+	function eor() {
+		fetch();
+		regs.a ^= data;
+		zero = regs.a == 0 ? 1 : 0;
+		negative = (regs.a & 0x80) != 0 ? 1 : 0;
+		return true;
+	}
 
 	/**
 		increment
 	**/
-	function inc() {}
+	function inc() {
+		fetch();
+		cache = data + 1;
+		write(addr, cache & 0xff);
+		zero = (cache & 0xff) == 0 ? 1 : 0;
+		negative = (cache & 0x80) != 0 ? 1 : 0;
+		return false;
+	}
 
 	/**
 		increment x
 	**/
-	function inx() {}
+	function inx() {
+		regs.x++;
+		zero = regs.x == 0 ? 1 : 0;
+		negative = (regs.x & 0x80) != 0 ? 1 : 0;
+		return false;
+	}
 
 	/**
 		increment y
 	**/
-	function iny() {}
+	function iny() {
+		regs.y++;
+		zero = regs.x == 0 ? 1 : 0;
+		negative = (regs.x & 0x80) != 0 ? 1 : 0;
+		return false;
+	}
 
 	/**
 		jump
 	**/
-	function jmp() {}
+	function jmp() {
+		regs.pc = addr;
+		return false;
+	}
 
 	/**
 		jump subroutine	
 	**/
-	function jsr() {}
+	function jsr() {
+		regs.pc--;
+
+		write(0x100 + regs.s, (regs.pc >> 8) & 0xff);
+		regs.s--;
+		write(0x100 + regs.s, regs.pc & 0xff);
+
+		regs.pc = addr;
+		return false;
+	}
 
 	/**
 		load accumulator
 	**/
-	function lda() {}
+	function lda() {
+		fetch();
+		regs.a = data;
+		zero = regs.a == 0 ? 1 : 0;
+		negative = (regs.a & 0x80) != 0 ? 1 : 0;
+		return false;
+	}
 
 	/**
 		load x
 	**/
-	function ldx() {}
+	function ldx() {
+		fetch();
+		regs.x = data;
+		zero = regs.x == 0 ? 1 : 0;
+		negative = (regs.x & 0x80) != 0 ? 1 : 0;
+	}
 
 	/**
 		load y
 	**/
-	function ldy() {}
+	function ldy() {
+		fetch();
+		regs.y = data;
+		zero = regs.y == 0 ? 1 : 0;
+		negative = (regs.y & 0x80) != 0 ? 1 : 0;
+	}
 
 	/**
 		logical shift right
 	**/
-	function lsr() {}
+	function lsr() {
+		fetch();
+		carry = (data & 1);
+		cache = data >> 1;
+		zero = ((cache & 0xff) == 0) ? 1 : 0;
+		negative = ((cache & 0x80) != 0) ? 1 : 0;
+		if (this.opTable.get(currentOpcode).addressingFunction == this.imp) {
+			regs.a = cache & 0xff;
+		} else {
+			write(addr, cache & 0xff);
+		}
+		return false;
+	}
 
 	/**
 		no operation
 	**/
-	function nop() {}
+	function nop() {
+		switch (currentOpcode) {
+			case 0x1C:
+				return true;
+			case 0x3C:
+				return true;
+			case 0x5C:
+				return true;
+			case 0x7C:
+				return true;
+			case 0xDC:
+				return true;
+			case 0xFC:
+				return true;
+			default:
+				return false;
+		}
+	}
 
 	/**
 		or with accumulator
