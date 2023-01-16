@@ -912,47 +912,118 @@ class Processor {
 	/**
 		or with accumulator
 	**/
-	function ora() {}
+	function ora() {
+		fetch();
+		regs.a |= data;
+		zero = regs.a == 0 ? 1 : 0;
+		negative = (regs.a & 0x80) != 0 ? 1 : 0;
+		return true;
+	}
 
 	/**
 		push accumulator
 	**/
-	function pha() {}
+	function pha() {
+		write(0x100 + regs.s, regs.a);
+		regs.s--;
+		return false;
+	}
 
 	/**
 		push processor status
 	**/
-	function php() {}
+	function php() {
+		write(0x100 + regs.s, regs.p | 16 | 32);
+		brek = 0;
+		unus = 0;
+		regs.s--;
+		return false;
+	}
 
 	/**
 		pull accumulator
 	**/
-	function pla() {}
+	function pla() {
+		regs.s++;
+		regs.a = read(0x100 + regs.s);
+		zero = (regs.a == 0) ? 1 : 0;
+		negative = (regs.a & 0x80) != 0 ? 1 : 0;
+		return false;
+	}
 
 	/**
 		pull processor status
 	**/
-	function plp() {}
+	function plp() {
+		regs.s++;
+		regs.p = read(0x100 + regs.s);
+		unus = 1;
+		return false;
+	}
 
 	/**
 		rotate left
 	**/
-	function rol() {}
+	function rol() {
+		fetch();
+		cache = data << 1 | carry;
+		carry = cache & 0xff00;
+		zero = (cache & 0xff) == 0 ? 1 : 0;
+		negative = (cache & 0x80);
+
+		if (this.opTable.get(currentOpcode).addressingFunction == this.imp) {
+			regs.a = cache & 0xff;
+		} else {
+			write(addr, cache & 0xff);
+		}
+		return false;
+	}
 
 	/**
 		rotate right
 	**/
-	function ror() {}
+	function ror() {
+		fetch();
+		cache = carry << 7 | data >> 1;
+		carry = data & 0x1;
+		zero = (data & 0xff) == 0 ? 1 : 0;
+		negative = (data & 0x80);
+		if (this.opTable.get(currentOpcode).addressingFunction == this.imp) {
+			regs.a = cache & 0xff;
+		} else {
+			write(addr, cache & 0xff);
+		}
+
+		return false;
+	}
 
 	/**
 		return from interrupt
 	**/
-	function rti() {}
+	function rti() {
+		regs.s++;
+		regs.p = read(0x100 + regs.s);
+		regs.p &= (~16);
+		regs.p &= (~32);
+		regs.s++;
+		regs.pc = read(0x100 + regs.s);
+		regs.s++;
+		regs.pc |= read(0x100 + regs.s) << 8;
+
+		return false;
+	}
 
 	/**
 		return from subroutine
 	**/
-	function rts() {}
+	function rts() {
+		regs.s++;
+		regs.pc = read(0x100 + regs.s);
+		regs.s++;
+		regs.pc |= read(0x100 + regs.s) << 8;
+		regs.pc++;
+		return false;
+	}
 
 	/**
 		substract with carry
