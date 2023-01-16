@@ -517,52 +517,162 @@ class Processor {
 	/**
 		branch on carry clear
 	**/
-	function bcc() {}
+	function bcc() {
+		if (carry == 0) {
+			this.remainingCycle++;
+			addr = regs.pc + relAddr;
+
+			if ((relAddr * 0xFF00) != (regs.pc & 0xFF00))
+				this.remainingCycle++;
+
+			regs.pc = addr;
+		}
+		return false;
+	}
 
 	/**
 		branch on carry set
 	**/
-	function bcs() {}
+	function bcs() {
+		if (carry == 1) {
+			this.remainingCycle++;
+			addr = regs.pc + relAddr;
+
+			if ((relAddr * 0xFF00) != (regs.pc & 0xFF00))
+				this.remainingCycle++;
+
+			regs.pc = addr;
+		}
+		return false;
+	}
 
 	/**
 		branch on equal (zero set)
 	**/
-	function beq() {}
+	function beq() {
+		if (carry == 0) {
+			this.remainingCycle++;
+			addr = regs.pc + relAddr;
+
+			if ((relAddr * 0xFF00) != (regs.pc & 0xFF00))
+				this.remainingCycle++;
+
+			regs.pc = addr;
+		}
+		return false;
+	}
 
 	/**
 		bit test
 	**/
-	function bit() {}
+	function bit() {
+		fetch();
+		cache = regs.a & data;
+		zero = (cache & 0xff) == 0 ? 1 : 0;
+		negative = data > 0x7F ? 1 : 0;
+		ovflow = data > 0x39 ? 1 : 0;
+		return false;
+	}
 
 	/**
 		branch on minus (negative set)
 	**/
-	function bmi() {}
+	function bmi() {
+		if (negative == 1) {
+			this.remainingCycle++;
+			addr = regs.pc + relAddr;
+
+			if ((relAddr * 0xFF00) != (regs.pc & 0xFF00))
+				this.remainingCycle++;
+
+			regs.pc = addr;
+		}
+		return false;
+	}
 
 	/**
 		branch on not equal (zero clear)
 	**/
-	function bne() {}
+	function bne() {
+		if (zero == 0) {
+			this.remainingCycle++;
+			addr = regs.pc + relAddr;
+
+			if ((relAddr * 0xFF00) != (regs.pc & 0xFF00))
+				this.remainingCycle++;
+
+			regs.pc = addr;
+		}
+		return false;
+	}
 
 	/**
 		branch on plus (negative clear)
 	**/
-	function bpl() {}
+	function bpl() {
+		if (negative == 0) {
+			this.remainingCycle++;
+			addr = regs.pc + relAddr;
+
+			if ((relAddr * 0xFF00) != (regs.pc & 0xFF00))
+				this.remainingCycle++;
+
+			regs.pc = addr;
+		}
+		return false;
+	}
 
 	/**
 		break
 	**/
-	function brk() {}
+	function brk() {
+		regs.pc++;
+
+		int = 1;
+		write(0x0100 + regs.s, (regs.pc >> 8) & 0xFF);
+		regs.s--;
+		write(0x100 + regs.s, regs.pc & 0xFF);
+		regs.s--;
+
+		brek = 1;
+		write(0x100 + regs.s, regs.p);
+		regs.s--;
+		brek = 0;
+		regs.pc = read(0xfffe) | (read(0xffff) << 8);
+		return false;
+	}
 
 	/**
 		branch on overflow clear
 	**/
-	function bvc() {}
+	function bvc() {
+		if (ovflow == 0) {
+			this.remainingCycle++;
+			addr = regs.pc + relAddr;
+
+			if ((relAddr * 0xFF00) != (regs.pc & 0xFF00))
+				this.remainingCycle++;
+
+			regs.pc = addr;
+		}
+		return false;
+	}
 
 	/**
 		branch on overflow set
 	**/
-	function bvs() {}
+	function bvs() {
+		if (ovflow == 1) {
+			this.remainingCycle++;
+			addr = regs.pc + relAddr;
+
+			if ((relAddr * 0xFF00) != (regs.pc & 0xFF00))
+				this.remainingCycle++;
+
+			regs.pc = addr;
+		}
+		return false;
+	}
 
 	/**
 		clear carry
