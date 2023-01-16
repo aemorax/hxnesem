@@ -92,6 +92,122 @@ class Processor {
 		this.opTable.set(0x4C, {cycles: 3, addressingFunction: this.abs, operationFunction: this.jmp}); // jmp abs 3
 		this.opTable.set(0x4D, {cycles: 4, addressingFunction: this.abs, operationFunction: this.eor}); // eor abs 4
 		this.opTable.set(0x4E, {cycles: 6, addressingFunction: this.abs, operationFunction: this.lsr}); // lsr abs 6
+
+		this.opTable.set(0x50, {cycles: 2, addressingFunction: this.rel, operationFunction: this.bvc}); // bvc rel 2
+		this.opTable.set(0x51, {cycles: 5, addressingFunction: this.izy, operationFunction: this.eor}); // eor izy 5
+		this.opTable.set(0x55, {cycles: 3, addressingFunction: this.zpx, operationFunction: this.eor}); // eor zpx 3
+		this.opTable.set(0x56, {cycles: 5, addressingFunction: this.zpx, operationFunction: this.lsr}); // lsr zpx 5
+		this.opTable.set(0x58, {cycles: 2, addressingFunction: this.imp, operationFunction: this.cli}); // cli imp 2
+		this.opTable.set(0x59, {cycles: 4, addressingFunction: this.aby, operationFunction: this.eor}); // eor aby 4
+		this.opTable.set(0x5D, {cycles: 4, addressingFunction: this.abx, operationFunction: this.eor}); // eor abx 4
+		this.opTable.set(0x5E, {cycles: 7, addressingFunction: this.abx, operationFunction: this.lsr}); // lsr abx 7
+
+		this.opTable.set(0x60, {cycles: 5, addressingFunction: this.imp, operationFunction: this.rts}); // rts imp 5
+		this.opTable.set(0x61, {cycles: 5, addressingFunction: this.izx, operationFunction: this.adc}); // adc izx 5
+		this.opTable.set(0x65, {cycles: 3, addressingFunction: this.zp0, operationFunction: this.adc}); // adc zp0 3
+		this.opTable.set(0x66, {cycles: 5, addressingFunction: this.zp0, operationFunction: this.ror}); // ror zp0 5
+		this.opTable.set(0x68, {cycles: 4, addressingFunction: this.imp, operationFunction: this.pla}); // pla imp 4
+		this.opTable.set(0x69, {cycles: 2, addressingFunction: this.imm, operationFunction: this.adc}); // adc imm 2
+		this.opTable.set(0x6A, {cycles: 2, addressingFunction: this.imp, operationFunction: this.ror}); // ror imp 2
+		this.opTable.set(0x6C, {cycles: 5, addressingFunction: this.ind, operationFunction: this.jmp}); // jmp ind 5
+		this.opTable.set(0x6D, {cycles: 4, addressingFunction: this.abs, operationFunction: this.adc}); // adc abs 4
+		this.opTable.set(0x6E, {cycles: 6, addressingFunction: this.abs, operationFunction: this.ror}); // ror abs 6
+
+		this.opTable.set(0x70, {cycles: 2, addressingFunction: this.rel, operationFunction: this.bvs}); // bvs rel 2
+		this.opTable.set(0x71, {cycles: 5, addressingFunction: this.izy, operationFunction: this.adc}); // adc izy 5
+		this.opTable.set(0x75, {cycles: 4, addressingFunction: this.zpx, operationFunction: this.adc}); // adc zpx 4
+		this.opTable.set(0x76, {cycles: 6, addressingFunction: this.zpx, operationFunction: this.ror}); // ror zpx 6
+		this.opTable.set(0x78, {cycles: 2, addressingFunction: this.imp, operationFunction: this.sei}); // sei imp 2
+		this.opTable.set(0x79, {cycles: 4, addressingFunction: this.aby, operationFunction: this.adc}); // adc aby 4
+		this.opTable.set(0x7D, {cycles: 4, addressingFunction: this.abx, operationFunction: this.adc}); // adc abx 4
+		this.opTable.set(0x7E, {cycles: 7, addressingFunction: this.abx, operationFunction: this.ror}); // ror abx 7
+
+		this.opTable.set(0x81, {cycles: 6, addressingFunction: this.izx, operationFunction: this.sta}); // sta izx 6
+		this.opTable.set(0x84, {cycles: 3, addressingFunction: this.zp0, operationFunction: this.sty}); // sty zp0 3
+		this.opTable.set(0x85, {cycles: 3, addressingFunction: this.zp0, operationFunction: this.sta}); // sta zp0 3
+		this.opTable.set(0x86, {cycles: 3, addressingFunction: this.zp0, operationFunction: this.stx}); // stx zp0 3
+		this.opTable.set(0x88, {cycles: 2, addressingFunction: this.imp, operationFunction: this.dey}); // dey imp 2
+		this.opTable.set(0x8A, {cycles: 2, addressingFunction: this.imp, operationFunction: this.txa}); // txa imp 2
+		this.opTable.set(0x8C, {cycles: 4, addressingFunction: this.abs, operationFunction: this.sty}); // sty abs 4
+		this.opTable.set(0x8D, {cycles: 4, addressingFunction: this.abs, operationFunction: this.sta}); // sta abs 4
+		this.opTable.set(0x8E, {cycles: 4, addressingFunction: this.abs, operationFunction: this.stx}); // stx abs 4
+
+		this.opTable.set(0x90, {cycles: 2, addressingFunction: this.rel, operationFunction: this.bcc}); // bcc rel 2
+		this.opTable.set(0x91, {cycles: 6, addressingFunction: this.izy, operationFunction: this.sta}); // sta izy 6
+		this.opTable.set(0x94, {cycles: 4, addressingFunction: this.zpx, operationFunction: this.sty}); // sty zpx 4
+		this.opTable.set(0x95, {cycles: 4, addressingFunction: this.zpx, operationFunction: this.sta}); // sta zpx 4
+		this.opTable.set(0x96, {cycles: 4, addressingFunction: this.zpy, operationFunction: this.stx}); // stx zpy 4
+		this.opTable.set(0x98, {cycles: 2, addressingFunction: this.imp, operationFunction: this.tya}); // tya imp 2
+		this.opTable.set(0x99, {cycles: 5, addressingFunction: this.aby, operationFunction: this.sta}); // sta aby 5
+		this.opTable.set(0x9A, {cycles: 2, addressingFunction: this.imp, operationFunction: this.txs}); // txs imp 2
+		this.opTable.set(0x9D, {cycles: 5, addressingFunction: this.abx, operationFunction: this.sta}); // sta abx 5
+
+		this.opTable.set(0xA0, {cycles: 2, addressingFunction: this.imm, operationFunction: this.ldy}); // ldy imm 2
+		this.opTable.set(0xA1, {cycles: 6, addressingFunction: this.izx, operationFunction: this.lda}); // lda izx 6
+		this.opTable.set(0xA2, {cycles: 2, addressingFunction: this.imm, operationFunction: this.ldx}); // ldx imm 2
+		this.opTable.set(0xA4, {cycles: 3, addressingFunction: this.zp0, operationFunction: this.ldy}); // ldy zp0 3
+		this.opTable.set(0xA5, {cycles: 3, addressingFunction: this.zp0, operationFunction: this.lda}); // lda zp0 3
+		this.opTable.set(0xA6, {cycles: 3, addressingFunction: this.zp0, operationFunction: this.ldx}); // ldx zp0 3
+		this.opTable.set(0xA8, {cycles: 2, addressingFunction: this.imp, operationFunction: this.tay}); // tay imp 2
+		this.opTable.set(0xA9, {cycles: 2, addressingFunction: this.imm, operationFunction: this.lda}); // lda imm 2
+		this.opTable.set(0xAA, {cycles: 2, addressingFunction: this.imp, operationFunction: this.tax}); // tax imp 2
+		this.opTable.set(0xAC, {cycles: 4, addressingFunction: this.abs, operationFunction: this.ldy}); // ldy abs 4
+		this.opTable.set(0xAD, {cycles: 4, addressingFunction: this.abs, operationFunction: this.lda}); // lda abs 4
+		this.opTable.set(0xAE, {cycles: 4, addressingFunction: this.abs, operationFunction: this.ldx}); // ldx abs 4
+
+		this.opTable.set(0xB0, {cycles: 2, addressingFunction: this.rel, operationFunction: this.bcs}); // bcs rel 2
+		this.opTable.set(0xB1, {cycles: 5, addressingFunction: this.izy, operationFunction: this.lda}); // lda izy 5
+		this.opTable.set(0xB4, {cycles: 4, addressingFunction: this.zpx, operationFunction: this.ldy}); // ldy zpx 4
+		this.opTable.set(0xB5, {cycles: 4, addressingFunction: this.zpx, operationFunction: this.lda}); // lda zpx 4
+		this.opTable.set(0xB6, {cycles: 4, addressingFunction: this.zpx, operationFunction: this.ldx}); // ldx zpx 4
+		this.opTable.set(0xB8, {cycles: 2, addressingFunction: this.imp, operationFunction: this.clv}); // clv imp 2
+		this.opTable.set(0xB9, {cycles: 4, addressingFunction: this.aby, operationFunction: this.lda}); // lda aby 4
+		this.opTable.set(0xBA, {cycles: 2, addressingFunction: this.imp, operationFunction: this.tsx}); // tsx imp 2
+		this.opTable.set(0xBC, {cycles: 4, addressingFunction: this.abx, operationFunction: this.ldy}); // ldy abx 4
+		this.opTable.set(0xBD, {cycles: 4, addressingFunction: this.abx, operationFunction: this.lda}); // lda abx 4
+		this.opTable.set(0xBE, {cycles: 4, addressingFunction: this.aby, operationFunction: this.ldx}); // ldx aby 4
+
+		this.opTable.set(0xC0, {cycles: 2, addressingFunction: this.imm, operationFunction: this.cpy}); // cpy imm 2
+		this.opTable.set(0xC1, {cycles: 6, addressingFunction: this.izx, operationFunction: this.cmp}); // cmp izx 6
+		this.opTable.set(0xC4, {cycles: 3, addressingFunction: this.zp0, operationFunction: this.cpy}); // cpy zp0 3
+		this.opTable.set(0xC5, {cycles: 3, addressingFunction: this.zp0, operationFunction: this.cmp}); // cmp zp0 3
+		this.opTable.set(0xC6, {cycles: 5, addressingFunction: this.zp0, operationFunction: this.dec}); // dec zp0 5
+		this.opTable.set(0xC8, {cycles: 2, addressingFunction: this.imp, operationFunction: this.iny}); // iny imp 2
+		this.opTable.set(0xC9, {cycles: 2, addressingFunction: this.imm, operationFunction: this.cmp}); // cmp imm 2
+		this.opTable.set(0xCA, {cycles: 2, addressingFunction: this.imp, operationFunction: this.dex}); // dex imp 2
+		this.opTable.set(0xCC, {cycles: 4, addressingFunction: this.abs, operationFunction: this.cpy}); // cpy abs 4
+		this.opTable.set(0xCD, {cycles: 4, addressingFunction: this.abs, operationFunction: this.cmp}); // cmp abs 4
+		this.opTable.set(0xCE, {cycles: 6, addressingFunction: this.abs, operationFunction: this.dec}); // dec abs 6
+
+		this.opTable.set(0xD0, {cycles: 2, addressingFunction: this.rel, operationFunction: this.bne}); // bne rel 2
+		this.opTable.set(0xD1, {cycles: 5, addressingFunction: this.izy, operationFunction: this.cmp}); // cmp izy 5
+		this.opTable.set(0xD5, {cycles: 4, addressingFunction: this.zpx, operationFunction: this.cmp}); // cmp zpx 4
+		this.opTable.set(0xD6, {cycles: 6, addressingFunction: this.zpx, operationFunction: this.dec}); // dec zpx 6
+		this.opTable.set(0xD8, {cycles: 2, addressingFunction: this.imp, operationFunction: this.cld}); // cld imp 2
+		this.opTable.set(0xD9, {cycles: 4, addressingFunction: this.aby, operationFunction: this.cmp}); // cmp aby 4
+		this.opTable.set(0xDD, {cycles: 4, addressingFunction: this.abx, operationFunction: this.cmp}); // cmp abx 4
+		this.opTable.set(0xDE, {cycles: 7, addressingFunction: this.abx, operationFunction: this.dec}); // dec abx 7
+
+		this.opTable.set(0xE0, {cycles: 2, addressingFunction: this.imm, operationFunction: this.cpx}); // cpx imm 2
+		this.opTable.set(0xE1, {cycles: 6, addressingFunction: this.izx, operationFunction: this.sbc}); // sbc izx 6
+		this.opTable.set(0xE4, {cycles: 3, addressingFunction: this.zp0, operationFunction: this.cpx}); // cpx zp0 3
+		this.opTable.set(0xE5, {cycles: 3, addressingFunction: this.zp0, operationFunction: this.sbc}); // sbc zp0 3
+		this.opTable.set(0xE6, {cycles: 5, addressingFunction: this.zp0, operationFunction: this.inc}); // inc zp0 5
+		this.opTable.set(0xE8, {cycles: 2, addressingFunction: this.imp, operationFunction: this.inx}); // inx imp 2
+		this.opTable.set(0xE9, {cycles: 2, addressingFunction: this.imm, operationFunction: this.sbc}); // sbc imm 2
+		this.opTable.set(0xEA, {cycles: 2, addressingFunction: this.imm, operationFunction: this.nop}); // nop imm 2
+		this.opTable.set(0xEC, {cycles: 4, addressingFunction: this.abs, operationFunction: this.cpx}); // cpx abs 4
+		this.opTable.set(0xED, {cycles: 4, addressingFunction: this.abs, operationFunction: this.sbc}); // sbc abs 4
+		this.opTable.set(0xEE, {cycles: 6, addressingFunction: this.abs, operationFunction: this.inc}); // inc abs 6
+
+		this.opTable.set(0xF0, {cycles: 2, addressingFunction: this.rel, operationFunction: this.beq}); // beq rel 2
+		this.opTable.set(0xF1, {cycles: 5, addressingFunction: this.izy, operationFunction: this.sbc}); // sbc izy 5
+		this.opTable.set(0xF5, {cycles: 4, addressingFunction: this.zpx, operationFunction: this.sbc}); // sbc zpx 4
+		this.opTable.set(0xF6, {cycles: 6, addressingFunction: this.zpx, operationFunction: this.inc}); // inc zpx 6
+		this.opTable.set(0xF8, {cycles: 2, addressingFunction: this.imp, operationFunction: this.sed}); // sed imp 2
+		this.opTable.set(0xF9, {cycles: 4, addressingFunction: this.aby, operationFunction: this.sbc}); // sbc aby 4
+		this.opTable.set(0xFD, {cycles: 4, addressingFunction: this.abx, operationFunction: this.sbc}); // sbc abx 4
+		this.opTable.set(0xFE, {cycles: 7, addressingFunction: this.abx, operationFunction: this.inc}); // inc abx 7
 	}
 
 	public function connectBus(bus:Bus) {
