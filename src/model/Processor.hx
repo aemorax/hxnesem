@@ -26,7 +26,7 @@ class Processor {
 	public var carry(get, set):Int;
 	public var zero(get, set):Int;
 	public var int(get, set):Int;
-	public var dec(get, set):Int;
+	public var decm(get, set):Int;
 	public var brek(get, set):Int;
 	public var unus(get, set):Int;
 	public var ovflow(get, set):Int;
@@ -147,11 +147,11 @@ class Processor {
 		return (value & 0x1);
 	}
 
-	function get_dec():Int {
+	function get_decm():Int {
 		return ((this.regs.p & 8) >> 3);
 	}
 
-	function set_dec(value:Int):Int {
+	function set_decm(value:Int):Int {
 		this.regs.p &= ~(8);
 		this.regs.p |= ((value & 0x1) << 3);
 
@@ -242,55 +242,284 @@ class Processor {
 	function izy() {}
 
 	// ---- Opcode ops
+
+	/**
+		add with carry
+	**/
 	function adc() {}
 
+	/**
+		and with accumulator
+	**/
 	function and() {}
 
+	/**
+		arithmetic shift left
+	**/
 	function asl() {}
 
+	/**
+		branch on carry clear
+	**/
 	function bcc() {}
 
+	/**
+		branch on carry set
+	**/
 	function bcs() {}
 
+	/**
+		branch on equal (zero set)
+	**/
 	function beq() {}
 
+	/**
+		bit test
+	**/
 	function bit() {}
 
+	/**
+		branch on minus (negative set)
+	**/
 	function bmi() {}
 
+	/**
+		branch on not equal (zero clear)
+	**/
 	function bne() {}
 
+	/**
+		branch on plus (negative clear)
+	**/
 	function bpl() {}
 
+	/**
+		break
+	**/
 	function brk() {}
 
+	/**
+		branch on overflow clear
+	**/
 	function bvc() {}
 
+	/**
+		branch on overflow set
+	**/
 	function bvs() {}
 
+	/**
+		clear carry
+	**/
 	function clc() {}
 
+	/**
+		clear decimal
+	**/
 	function cld() {}
 
+	/**
+		clear interrupt disable
+	**/
+	function cli() {}
+
+	/**
+		clear overflow
+	**/
+	function clv() {}
+
+	/**
+		compare with accumulator
+	**/
+	function cmp() {}
+
+	/**
+		compare with x
+	**/
+	function cpx() {}
+
+	/**
+		compare with y
+	**/
+	function cpy() {}
+
+	/**
+		decrement
+	**/
+	function dec() {}
+
+	/**
+		decrement x
+	**/
+	function dex() {}
+
+	/**
+		decrement y
+	**/
+	function dey() {}
+
+	/**
+		exclusive or accumulator
+	**/
 	function eor() {}
 
+	/**
+		increment
+	**/
+	function inc() {}
+
+	/**
+		increment x
+	**/
+	function inx() {}
+
+	/**
+		increment y
+	**/
+	function iny() {}
+
+	/**
+		jump
+	**/
 	function jmp() {}
 
+	/**
+		jump subroutine	
+	**/
 	function jsr() {}
 
+	/**
+		load accumulator
+	**/
+	function lda() {}
+
+	/**
+		load x
+	**/
+	function ldx() {}
+
+	/**
+		load y
+	**/
+	function ldy() {}
+
+	/**
+		logical shift right
+	**/
 	function lsr() {}
 
+	/**
+		no operation
+	**/
+	function nop() {}
+
+	/**
+		or with accumulator
+	**/
 	function ora() {}
 
+	/**
+		push accumulator
+	**/
 	function pha() {}
 
+	/**
+		push processor status
+	**/
 	function php() {}
 
+	/**
+		pull accumulator
+	**/
+	function pla() {}
+
+	/**
+		pull processor status
+	**/
 	function plp() {}
 
+	/**
+		rotate left
+	**/
 	function rol() {}
 
+	/**
+		rotate right
+	**/
+	function ror() {}
+
+	/**
+		return from interrupt
+	**/
 	function rti() {}
 
+	/**
+		return from subroutine
+	**/
+	function rts() {}
+
+	/**
+		substract with carry
+	**/
+	function sbc() {}
+
+	/**
+		set carry
+	**/
 	function sec() {}
+
+	/**
+		set decimal
+	**/
+	function sed() {}
+
+	/**
+		set interrupt disable
+	**/
+	function sei() {}
+
+	/**
+		store accumulator
+	**/
+	function sta() {}
+
+	/**
+		store x
+	**/
+	function stx() {}
+
+	/**
+		store y
+	**/
+	function sty() {}
+
+	/**
+		transfer a to x
+	**/
+	function tax() {}
+
+	/**
+		transfer a to y
+	**/
+	function tay() {}
+
+	/**
+		transfer stack pointer to x
+	**/
+	function tsx() {}
+
+	/**
+		transfer x to a
+	**/
+	function txa() {}
+
+	/**
+		transfer x to stack pointer
+	**/
+	function txs() {}
+
+	/**
+		transfer y to a
+	**/
+	function tya() {}
 }
