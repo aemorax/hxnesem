@@ -20,6 +20,8 @@ typedef Operation = {
 class Processor {
 	final opTable:Vector<Operation> = new Vector<Operation>(256);
 
+	public var timer:Int = 0;
+
 	public var bus:Bus;
 	public var regs:Registers;
 	public var data:Int = 0;
@@ -37,13 +39,21 @@ class Processor {
 
 	public function new() {
 		this.regs = {
-			p: 0,
+			p: 32,
 			a: 0,
 			x: 0,
 			y: 0,
-			s: 0,
+			s: 0xFD,
 			pc: 0
 		};
+
+		addr = 0xfffc;
+		regs.pc = read(addr) | (read(addr + 1) << 8);
+
+		relAddr = 0;
+		addr = 0;
+		data = 0;
+		cache = 0;
 
 		this.opTable.set(0x00, {cycles: 7, addressingFunction: this.imp, operationFunction: this.brk});
 		this.opTable.set(0x01, {cycles: 6, addressingFunction: this.izx, operationFunction: this.ora});
@@ -232,13 +242,70 @@ class Processor {
 		return data;
 	}
 
-	public function clock() {}
+	public function clock() {
+		if (remainingCycle == 0) {
+			currentOpcode = read(regs.pc);
+			unus = 1;
+			regs.pc++;
+			if (this.opTable.get(currentOpcode) != null) {
+				remainingCycle = this.opTable.get(currentOpcode).cycles;
+				var need_c1 = this.opTable.get(currentOpcode).addressingFunction();
+				var need_c2 = this.opTable.get(currentOpcode).operationFunction();
+				if (need_c1)
+					remainingCycle++;
+				if (need_c2)
+					remainingCycle++;
+			}
+			unus = 1;
+		}
 
-	public function reset() {}
+		remainingCycle--;
+		timer++;
+	}
 
-	public function irq() {}
+	public function reset() {
+		addr = 0xfffc;
+		var lo = read(addr);
+		var hi = read(addr + 1);
+		regs.pc = (hi << 8) | lo;
 
-	public function nmi() {}
+		regs.a = 0;
+		regs.x = 0;
+		regs.y = 0;
+		regs.s = 0xFD;
+		regs.p = 32;
+
+		relAddr = 0;
+		addr = 0;
+		data = 0;
+		cache = 0;
+
+		remainingCycle = 8;
+	}
+
+	public function irq() {
+		if (int == 0) {
+			nmi();
+			remainingCycle = 7;
+		}
+	}
+
+	public function nmi() {
+		write(0x100 + regs.s, (regs.pc >> 8) & 0xff);
+		regs.s--;
+		write(0x100 + regs.s, (regs.pc) & 0xff);
+		regs.s--;
+
+		brek = 0;
+		unus = 1;
+		int = 1;
+		write(0x100 + regs.s, regs.p);
+		regs.s--;
+
+		addr = 0xfffa;
+		regs.pc = read(addr) | (read(addr + 1) << 8);
+		remainingCycle = 8;
+	}
 
 	function get_carry():Int {
 		return (this.regs.p & 1);
