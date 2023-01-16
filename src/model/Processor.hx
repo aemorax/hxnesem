@@ -13,7 +13,7 @@ typedef Registers = {
 
 typedef Operation = {
 	var cycles:Int;
-	var addressingFunction:Void->Void;
+	var addressingFunction:Void->Bool;
 	var operationFunction:Void->Void;
 }
 
@@ -24,6 +24,7 @@ class Processor {
 	public var regs:Registers;
 	public var data:Int = 0;
 	public var addr:Int = 0;
+	public var cache:Int = 0;
 	public var relAddr:Int = 0;
 	public var carry(get, set):Int;
 	public var zero(get, set):Int;
@@ -222,6 +223,13 @@ class Processor {
 
 	public function write(address:Int, data:Int) {
 		this.bus.write(address, data);
+	}
+
+	public function fetch():Int {
+		if (this.opTable.get(currentOpcode).addressingFunction != this.imp) {
+			data = read(addr);
+		}
+		return data;
 	}
 
 	public function clock() {}
@@ -463,17 +471,48 @@ class Processor {
 	/**
 		add with carry
 	**/
-	function adc() {}
+	function adc() {
+		fetch();
+
+		cache = regs.a + data + carry;
+
+		carry = cache > 255 ? 1 : 0;
+		zero = (cache & 0xff) == 0 ? 1 : 0;
+		ovflow = ((~(regs.a ^ data) & (regs.a ^ cache)) & 0x80) == 0 ? 0 : 1;
+		negative = ((cache & 0x80) == 0) ? 0 : 1;
+
+		regs.a = cache & 0xff;
+
+		return true;
+	}
 
 	/**
 		and with accumulator
 	**/
-	function and() {}
+	function and() {
+		fetch();
+		regs.a = regs.a & data;
+		zero = regs.a == 0 ? 0 : 1;
+		negative = (regs.a & 0x80) == 0 ? 0 : 1;
+		return true;
+	}
 
 	/**
 		arithmetic shift left
 	**/
-	function asl() {}
+	function asl() {
+		fetch();
+		cache = data << 1;
+		carry = (cache & 0xff00) > 0 ? 1 : 0;
+		zero = (cache & 0xff);
+		negative = (cache & 0x80) == 0 ? 0 : 1;
+		if (this.opTable.get(currentOpcode).addressingFunction == this.imp) {
+			regs.a = cache & 0xFF;
+		} else {
+			write(addr, cache & 0xFF);
+		}
+		return false;
+	}
 
 	/**
 		branch on carry clear
