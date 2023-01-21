@@ -1,0 +1,5 @@
+--library heaps
+--class-path src
+--main Emulator
+--js web/emulator.js
+--define windowSize=256x240

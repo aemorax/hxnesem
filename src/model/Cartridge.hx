@@ -3,7 +3,6 @@ package model;
 import mappers.Mapper000;
 import interfaces.IMapper;
 import haxe.io.Bytes;
-import sys.io.File;
 
 typedef INesHeader = {
 	var name:String;
@@ -35,23 +34,22 @@ class Cartridge {
 	var prgMemory:Bytes;
 	var chrMemory:Bytes;
 
-	public function new(path:String) {
-		var f = File.read(path, true);
-
+	public function new(bytes:Bytes) {
 		var header:INesHeader = {
-			name: f.readString(4),
-			prg: f.readByte(),
-			chr: f.readByte(),
-			mapper1: f.readByte(),
-			mapper2: f.readByte(),
-			ram_size: f.readByte(),
-			tv_system1: f.readByte(),
-			tv_system2: f.readByte(),
-			unused: f.readString(5)
+			name: bytes.getString(0, 4),
+			prg: bytes.get(pos += 4),
+			chr: bytes.get(pos += 1),
+			mapper1: bytes.get(pos += 1),
+			mapper2: bytes.get(pos += 1),
+			ram_size: bytes.get(pos += 1),
+			tv_system1: bytes.get(pos += 1),
+			tv_system2: bytes.get(pos += 1),
+			unused: bytes.getString(pos, 5)
 		};
+		pos += 5;
 
 		if ((header.mapper1 & 0x04) != 0)
-			f.seek(512, SeekCur);
+			pos += 512;
 
 		mapperID = ((header.mapper2 >> 4) << 4) | (header.mapper1 >> 4);
 		mirror = (header.mapper1 & 0x01) != 0 ? Vertical : Horizontal;
@@ -60,11 +58,13 @@ class Cartridge {
 
 		if (fileType == 0) {} else if (fileType == 1) {
 			prgCount = header.prg;
-			var prgData:String = f.readString(prgCount * 16384);
+			var prgData:String = bytes.getString(pos, prgCount * 16384);
+			pos += prgCount * 16384;
 			prgMemory = Bytes.ofString(prgData);
 
 			chrCount = header.chr;
-			var chrData:String = f.readString(prgCount * 16384);
+			var chrData:String = bytes.getString(pos, chrCount * 8192);
+			pos += chrCount * 8192;
 			chrMemory = Bytes.ofString(chrData);
 		} else if (fileType == 2) {}
 
@@ -72,8 +72,6 @@ class Cartridge {
 			case 0:
 				mapper = new Mapper000(prgCount, chrCount);
 		}
-
-		f.close();
 	}
 
 	public function ppuRead(addr:Int, data:Dynamic) {

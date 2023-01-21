@@ -1,6 +1,6 @@
 package;
 
-import h2d.TileGroup;
+import h2d.Scene.ScaleMode;
 import h2d.Bitmap;
 import hxd.PixelFormat;
 import hxd.Pixels;
@@ -14,6 +14,7 @@ class Emulator extends hxd.App {
 	public static var resTime:Float;
 
 	override function init() {
+		s2d.scaleMode = ScaleMode.Stretch(256, 240);
 		sp = new Pixels(256, 240, bus.ppu.screen, PixelFormat.RGBA, 0);
 		bmp = new Bitmap(Tile.fromPixels(sp), s2d);
 	}
@@ -34,6 +35,12 @@ class Emulator extends hxd.App {
 	}
 
 	static function main() {
+		#if hl
+		hxd.Res.initEmbed();
+		#else
+		hxd.Res.initEmbed();
+		#end
+
 		bus = new Bus();
 		new Emulator();
 	}
