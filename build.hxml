@@ -1,6 +1,1 @@
---library heaps
---library hlsdl
---class-path src
---main Emulator
---hl out/emulator.hl
---define windowSize=256x240
+build.web.hxml

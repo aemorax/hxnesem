@@ -5,7 +5,7 @@ all: vm web
 vm: out/emulator.hl
 
 out/emulator.hl: $(SOURCE_FILES)
-	haxe build.hxml
+	haxe build.hl.hxml
 
 web: web/emulator.js
 
