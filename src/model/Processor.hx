@@ -56,36 +56,36 @@ class Processor {
 		data = 0;
 		cache = 0;
 
-		this.opTable.set(0x00, {cycles: 7, addressingFunction: this.imp, operationFunction: this.brk});
-		this.opTable.set(0x01, {cycles: 6, addressingFunction: this.izx, operationFunction: this.ora});
-		this.opTable.set(0x05, {cycles: 3, addressingFunction: this.zp0, operationFunction: this.ora});
-		this.opTable.set(0x06, {cycles: 5, addressingFunction: this.zp0, operationFunction: this.asl});
-		this.opTable.set(0x08, {cycles: 8, addressingFunction: this.imp, operationFunction: this.php});
-		this.opTable.set(0x09, {cycles: 2, addressingFunction: this.imm, operationFunction: this.ora});
-		this.opTable.set(0x0A, {cycles: 2, addressingFunction: this.imp, operationFunction: this.asl});
-		this.opTable.set(0x0D, {cycles: 4, addressingFunction: this.abs, operationFunction: this.ora});
-		this.opTable.set(0x0E, {cycles: 6, addressingFunction: this.abs, operationFunction: this.asl});
+		this.opTable.set(0x00, {cycles: 7, addressingFunction: this.imp, operationFunction: this.brk}); // brk imp 7
+		this.opTable.set(0x01, {cycles: 6, addressingFunction: this.izx, operationFunction: this.ora}); // ora izx 6
+		this.opTable.set(0x05, {cycles: 3, addressingFunction: this.zp0, operationFunction: this.ora}); // ora zp0 3
+		this.opTable.set(0x06, {cycles: 5, addressingFunction: this.zp0, operationFunction: this.asl}); // asl zp0 5
+		this.opTable.set(0x08, {cycles: 8, addressingFunction: this.imp, operationFunction: this.php}); // php imp 8
+		this.opTable.set(0x09, {cycles: 2, addressingFunction: this.imm, operationFunction: this.ora}); // ora imm 2
+		this.opTable.set(0x0A, {cycles: 2, addressingFunction: this.imp, operationFunction: this.asl}); // asl imp 2
+		this.opTable.set(0x0D, {cycles: 4, addressingFunction: this.abs, operationFunction: this.ora}); // ora abs 4
+		this.opTable.set(0x0E, {cycles: 6, addressingFunction: this.abs, operationFunction: this.asl}); // asl abs 6
 
-		this.opTable.set(0x10, {cycles: 2, addressingFunction: this.rel, operationFunction: this.bpl});
-		this.opTable.set(0x11, {cycles: 5, addressingFunction: this.izy, operationFunction: this.ora});
-		this.opTable.set(0x15, {cycles: 4, addressingFunction: this.zpx, operationFunction: this.ora});
-		this.opTable.set(0x16, {cycles: 6, addressingFunction: this.zpx, operationFunction: this.asl});
-		this.opTable.set(0x18, {cycles: 2, addressingFunction: this.imp, operationFunction: this.clc});
-		this.opTable.set(0x19, {cycles: 4, addressingFunction: this.aby, operationFunction: this.ora});
-		this.opTable.set(0x1D, {cycles: 4, addressingFunction: this.abx, operationFunction: this.ora});
-		this.opTable.set(0x1E, {cycles: 7, addressingFunction: this.abx, operationFunction: this.asl});
+		this.opTable.set(0x10, {cycles: 2, addressingFunction: this.rel, operationFunction: this.bpl}); // bpl rel 2
+		this.opTable.set(0x11, {cycles: 5, addressingFunction: this.izy, operationFunction: this.ora}); // ora izy 5
+		this.opTable.set(0x15, {cycles: 4, addressingFunction: this.zpx, operationFunction: this.ora}); // ora zpx 4
+		this.opTable.set(0x16, {cycles: 6, addressingFunction: this.zpx, operationFunction: this.asl}); // asl zpx 6
+		this.opTable.set(0x18, {cycles: 2, addressingFunction: this.imp, operationFunction: this.clc}); // clc imp 2
+		this.opTable.set(0x19, {cycles: 4, addressingFunction: this.aby, operationFunction: this.ora}); // ora aby 4
+		this.opTable.set(0x1D, {cycles: 4, addressingFunction: this.abx, operationFunction: this.ora}); // ora abx 4
+		this.opTable.set(0x1E, {cycles: 7, addressingFunction: this.abx, operationFunction: this.asl}); // asl abx 7
 
-		this.opTable.set(0x20, {cycles: 6, addressingFunction: this.abs, operationFunction: this.jsr});
-		this.opTable.set(0x21, {cycles: 6, addressingFunction: this.izx, operationFunction: this.and});
-		this.opTable.set(0x24, {cycles: 3, addressingFunction: this.zp0, operationFunction: this.bit});
-		this.opTable.set(0x25, {cycles: 3, addressingFunction: this.zp0, operationFunction: this.and});
-		this.opTable.set(0x26, {cycles: 5, addressingFunction: this.zp0, operationFunction: this.rol});
-		this.opTable.set(0x28, {cycles: 4, addressingFunction: this.imp, operationFunction: this.plp});
-		this.opTable.set(0x29, {cycles: 2, addressingFunction: this.imm, operationFunction: this.and});
-		this.opTable.set(0x2A, {cycles: 2, addressingFunction: this.imp, operationFunction: this.rol});
-		this.opTable.set(0x2C, {cycles: 4, addressingFunction: this.abs, operationFunction: this.bit});
-		this.opTable.set(0x2D, {cycles: 4, addressingFunction: this.abs, operationFunction: this.and});
-		this.opTable.set(0x2E, {cycles: 6, addressingFunction: this.abs, operationFunction: this.rol});
+		this.opTable.set(0x20, {cycles: 6, addressingFunction: this.abs, operationFunction: this.jsr}); // jsr abs 6
+		this.opTable.set(0x21, {cycles: 6, addressingFunction: this.izx, operationFunction: this.and}); // and izx 6
+		this.opTable.set(0x24, {cycles: 3, addressingFunction: this.zp0, operationFunction: this.bit}); // bit zp0 3
+		this.opTable.set(0x25, {cycles: 3, addressingFunction: this.zp0, operationFunction: this.and}); // and zp0 3
+		this.opTable.set(0x26, {cycles: 5, addressingFunction: this.zp0, operationFunction: this.rol}); // rol zp0 5
+		this.opTable.set(0x28, {cycles: 4, addressingFunction: this.imp, operationFunction: this.plp}); // plp imp 4
+		this.opTable.set(0x29, {cycles: 2, addressingFunction: this.imm, operationFunction: this.and}); // and imm 2
+		this.opTable.set(0x2A, {cycles: 2, addressingFunction: this.imp, operationFunction: this.rol}); // rol imp 2
+		this.opTable.set(0x2C, {cycles: 4, addressingFunction: this.abs, operationFunction: this.bit}); // bit abs 4
+		this.opTable.set(0x2D, {cycles: 4, addressingFunction: this.abs, operationFunction: this.and}); // and abs 4
+		this.opTable.set(0x2E, {cycles: 6, addressingFunction: this.abs, operationFunction: this.rol}); // rol abs 6
 
 		this.opTable.set(0x30, {cycles: 2, addressingFunction: this.rel, operationFunction: this.bmi}); // bmi rel 2
 		this.opTable.set(0x31, {cycles: 5, addressingFunction: this.izx, operationFunction: this.and}); // and izx 5
